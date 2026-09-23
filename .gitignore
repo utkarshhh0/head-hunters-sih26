@@ -216,3 +216,41 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==================================================
+# Project-Specific Hygiene Rules (SIH'26 - Head Hunters)
+# ==================================================
+
+# Private Development Log
+development_logs.md
+
+# Environment Secrets
+.env
+.env.*
+!.env.example
+
+# Synthetic & Local Investigative Datasets
+data/raw/
+data/processed/
+data/synthetic/
+data/cache/
+
+# Local Neo4j Database State & Volumes
+neo4j_data/
+neo4j_logs/
+
+# Frontend Build & Package Manager Artifacts
+node_modules/
+dist/
+build/
+.vite/
+
+# IDE & OS Metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentation Private Drafts
+docs/private/
+
