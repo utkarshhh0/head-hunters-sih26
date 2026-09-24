@@ -1,3 +1,4 @@
 pydantic>=2.7.0
 pytest>=8.2.0
 faker>=25.0.0
+neo4j>=5.18.0

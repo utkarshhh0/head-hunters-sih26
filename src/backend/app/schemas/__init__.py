@@ -21,6 +21,18 @@ from app.schemas.relationship import (
 )
 from app.schemas.evidence import EvidenceProvenance
 from app.schemas.finding import SignalType, AnalyticalSignal, InvestigativeFinding
+from app.schemas.analytics import (
+    TimeWindow,
+    StructuralSignalType,
+    TemporalSignalType,
+    AnalyticalMetric,
+    StructuralSignal,
+    TemporalSignal,
+    CommunityResult,
+    TemporalSummary,
+    PatternType,
+    MultiSignalPattern,
+)
 
 __all__ = [
     "SourceRecord",
@@ -43,4 +55,14 @@ __all__ = [
     "SignalType",
     "AnalyticalSignal",
     "InvestigativeFinding",
+    "TimeWindow",
+    "StructuralSignalType",
+    "TemporalSignalType",
+    "AnalyticalMetric",
+    "StructuralSignal",
+    "TemporalSignal",
+    "CommunityResult",
+    "TemporalSummary",
+    "PatternType",
+    "MultiSignalPattern",
 ]
