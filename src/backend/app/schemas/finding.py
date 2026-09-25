@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -29,6 +29,19 @@ class AnalyticalSignal(BaseModel):
     rule_description: str = Field(..., description="Deterministic description of rule trigger")
 
 
+class FindingStatus(str, Enum):
+    """Lifecycle status of an investigative finding."""
+
+    OPEN = "OPEN"
+    IN_REVIEW = "IN_REVIEW"
+    RESOLVED = "RESOLVED"
+    DISMISSED = "DISMISSED"
+
+
+# Deferred import of TimeWindow to avoid circular dependency with app.schemas.analytics
+from app.schemas.analytics import TimeWindow
+
+
 class InvestigativeFinding(BaseModel):
     """High-level explainable investigative finding combining analytical signals and evidence."""
 
@@ -41,10 +54,14 @@ class InvestigativeFinding(BaseModel):
     relationship_ids: List[str] = Field(default_factory=list, description="Referenced relationship IDs")
     signal_ids: List[str] = Field(default_factory=list, description="Referenced analytical signal IDs")
     evidence_ids: List[str] = Field(default_factory=list, description="Referenced evidence provenance IDs")
-    confidence: float = Field(..., description="Analytical confidence score (0.0 to 1.0)")
+    confidence: float = Field(default=1.0, description="Analytical confidence score (0.0 to 1.0)")
     caveats: List[str] = Field(default_factory=list, description="Explicit synthetic/analytical caveats")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Creation timestamp")
-
+    status: FindingStatus = Field(default=FindingStatus.OPEN, description="Investigative lifecycle status")
+    pattern_id: Optional[str] = Field(None, description="Optional multi-signal pattern ID reference")
+    pattern_type: Optional[str] = Field(None, description="Optional pattern type classification")
+    time_window: Optional[TimeWindow] = Field(None, description="Observed time window if temporally bounded")
+    investigator_notes: Optional[str] = Field(None, description="Optional investigator assessment notes")
 
     @field_validator("confidence")
     @classmethod

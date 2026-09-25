@@ -20,7 +20,7 @@ from app.schemas.relationship import (
     Relationship,
 )
 from app.schemas.evidence import EvidenceProvenance
-from app.schemas.finding import SignalType, AnalyticalSignal, InvestigativeFinding
+from app.schemas.finding import SignalType, AnalyticalSignal, FindingStatus, InvestigativeFinding
 from app.schemas.analytics import (
     TimeWindow,
     StructuralSignalType,
@@ -32,6 +32,12 @@ from app.schemas.analytics import (
     TemporalSummary,
     PatternType,
     MultiSignalPattern,
+)
+from app.schemas.workspace import (
+    FindingStatusUpdate,
+    FindingProvenanceBundle,
+    WorkspaceSummary,
+    EntityNeighborhoodResponse,
 )
 
 __all__ = [
@@ -54,6 +60,7 @@ __all__ = [
     "EvidenceProvenance",
     "SignalType",
     "AnalyticalSignal",
+    "FindingStatus",
     "InvestigativeFinding",
     "TimeWindow",
     "StructuralSignalType",
@@ -65,4 +72,8 @@ __all__ = [
     "TemporalSummary",
     "PatternType",
     "MultiSignalPattern",
+    "FindingStatusUpdate",
+    "FindingProvenanceBundle",
+    "WorkspaceSummary",
+    "EntityNeighborhoodResponse",
 ]
