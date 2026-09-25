@@ -121,8 +121,26 @@ assert(entityIntelTsx.includes('possible_match_count'), 'EntityIntelligence disp
 assert(entityIntelTsx.includes('source_record_ids'), 'EntityIntelligence displays source_record_ids provenance');
 assert(entityIntelTsx.includes('/network?focus='), 'EntityIntelligence provides navigation to Network Explorer');
 
-// 7. Verify Live FastAPI Backend Smoke Test (if backend is active)
-console.log('\n--- 7. Live FastAPI Backend Smoke Test ---');
+// 7. Verify Network Explorer Implementation (Phase 6B.2)
+console.log('\n--- 7. Network Explorer Component Implementation (Phase 6B.2) ---');
+const packageJson = readFileSync(join(FRONTEND_DIR, 'package.json'), 'utf-8');
+assert(packageJson.includes('cytoscape'), 'package.json contains cytoscape dependency');
+
+const networkExplorerTsx = readFileSync(join(FRONTEND_DIR, 'src/pages/NetworkExplorer.tsx'), 'utf-8');
+assert(networkExplorerTsx.includes("import cytoscape"), 'NetworkExplorer imports cytoscape');
+assert(networkExplorerTsx.includes("searchParams.get('focus')"), 'NetworkExplorer reads focus parameter from URL');
+assert(networkExplorerTsx.includes('getEntityNeighborhood(entityId, 2, 50)'), 'NetworkExplorer calls getEntityNeighborhood strictly with depth=2 and limit=50');
+assert(networkExplorerTsx.includes('/entities?id='), 'NetworkExplorer links selected node to /entities?id=');
+assert(networkExplorerTsx.includes('containerRef'), 'NetworkExplorer attaches Cytoscape to DOM container ref');
+assert(networkExplorerTsx.includes('runLayout'), 'NetworkExplorer executes dynamic topological graph layout');
+assert(networkExplorerTsx.includes('cose'), 'NetworkExplorer supports force-directed COSE layout');
+assert(networkExplorerTsx.includes('concentric'), 'NetworkExplorer supports concentric ring layout');
+assert(networkExplorerTsx.includes('breadthfirst'), 'NetworkExplorer supports hierarchical tree layout');
+assert(networkExplorerTsx.includes('RELATIONSHIP INSPECTION'), 'NetworkExplorer includes relationship edge inspector');
+assert(networkExplorerTsx.includes('MOD-03-NET'), 'NetworkExplorer preserves MOD-03-NET module code');
+
+// 8. Verify Live FastAPI Backend Smoke Test (if backend is active)
+console.log('\n--- 8. Live FastAPI Backend Smoke Test ---');
 try {
   const healthRes = await fetch('http://127.0.0.1:8000/health');
   assert(healthRes.status === 200, 'Live Backend /health returns HTTP 200');
@@ -139,12 +157,22 @@ try {
     const detailsJson = await detailsRes.json();
     assert(typeof detailsJson.direct_relationship_count === 'number', 'Entity details contains direct_relationship_count');
 
-    const nbRes = await fetch(`http://127.0.0.1:8000/api/v1/entities/${encodeURIComponent(testEntity.entity_id)}/neighborhood?depth=1&limit=50`);
-    assert(nbRes.status === 200, `Live Backend /api/v1/entities/{id}/neighborhood returns HTTP 200`);
-    const nbJson = await nbRes.json();
-    assert(typeof nbJson.total_nodes === 'number', 'Neighborhood response contains total_nodes');
-    assert(typeof nbJson.total_edges === 'number', 'Neighborhood response contains total_edges');
-    assert(Array.isArray(nbJson.relationships), 'Neighborhood response contains relationships array');
+    // 1-hop test
+    const nbRes1 = await fetch(`http://127.0.0.1:8000/api/v1/entities/${encodeURIComponent(testEntity.entity_id)}/neighborhood?depth=1&limit=50`);
+    assert(nbRes1.status === 200, `Live Backend /api/v1/entities/{id}/neighborhood returns HTTP 200 (depth=1)`);
+    const nbJson1 = await nbRes1.json();
+    assert(typeof nbJson1.total_nodes === 'number', 'Neighborhood (depth=1) contains total_nodes');
+    assert(typeof nbJson1.total_edges === 'number', 'Neighborhood (depth=1) contains total_edges');
+    assert(Array.isArray(nbJson1.relationships), 'Neighborhood (depth=1) contains relationships array');
+
+    // 2-hop test (Network Explorer contract)
+    const nbRes2 = await fetch(`http://127.0.0.1:8000/api/v1/entities/${encodeURIComponent(testEntity.entity_id)}/neighborhood?depth=2&limit=50`);
+    assert(nbRes2.status === 200, `Live Backend /api/v1/entities/{id}/neighborhood returns HTTP 200 (depth=2)`);
+    const nbJson2 = await nbRes2.json();
+    assert(nbJson2.depth === 2, 'Neighborhood depth equals 2');
+    assert(typeof nbJson2.total_nodes === 'number', 'Neighborhood (depth=2) contains total_nodes');
+    assert(typeof nbJson2.total_edges === 'number', 'Neighborhood (depth=2) contains total_edges');
+    assert(Array.isArray(nbJson2.relationships), 'Neighborhood (depth=2) contains relationships array');
   } else {
     console.log('[INFO] No entities in database to test specific entity details/neighborhood.');
   }
@@ -156,7 +184,7 @@ try {
 console.log('\n================================================================');
 if (failedTests === 0) {
   console.log('ALL VERIFICATIONS PASSED (0 failures)');
-  console.log('Phase 6B.1 implementation verified successfully.');
+  console.log('Phase 6B.2 Network Explorer implementation verified successfully.');
 } else {
   console.error(`VERIFICATION FAILED: ${failedTests} test(s) failed.`);
   process.exit(1);
