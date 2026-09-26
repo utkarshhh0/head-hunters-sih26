@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, Server, RefreshCw } from 'lucide-react';
+import { Server, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getHealth } from '../../api';
 
@@ -45,10 +45,9 @@ export const Header: React.FC = () => {
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-1.5 text-[11px] font-mono text-institutional-textMuted border-l border-institutional-borderMuted pl-4">
-          <ShieldAlert className="w-3.5 h-3.5 text-amber-500/80" />
-          <span>OFFICIAL USE ONLY · EVIDENTIARY AUDIT LOGGED</span>
-        </div>
+       <div className="hidden md:flex items-center gap-1.5 text-[11px] font-mono text-institutional-textMuted border-l border-institutional-borderMuted pl-4">
+         <span>CONTROLLED DEMONSTRATION · SYNTHETIC DATA</span>
+       </div>
       </div>
 
       {/* Backend & Environment Live Status */}
@@ -90,10 +89,10 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Clearance Level */}
+       {/* Environment */}
         <div className="hidden lg:flex items-center gap-1.5 text-[10px] font-mono px-2 py-1 rounded bg-slate-950 border border-slate-800 text-slate-400">
-          <span>CLEARANCE:</span>
-          <span className="text-slate-200 font-semibold">LEVEL 4</span>
+         <span>ENVIRONMENT:</span>
+         <span className="text-slate-200 font-semibold">LOCAL DEMO</span>
         </div>
       </div>
     </header>

@@ -319,8 +319,15 @@ export const EntityIntelligence: React.FC = () => {
             </div>
           </div>
 
-          {/* Primary Progression Action: Explore in Network Explorer */}
-          <div className="flex items-center gap-3 self-start md:self-auto">
+          {/* Primary Progression Actions: Network Explorer & Timeline */}
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            <button
+              onClick={() => navigate(`/timeline?entity_id=${encodeURIComponent(details.entity_id)}`)}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-mono rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors"
+            >
+              <Clock className="w-3.5 h-3.5 text-blue-400" />
+              <span>Timeline</span>
+            </button>
             <button
               onClick={() => navigate(`/network?focus=${encodeURIComponent(details.entity_id)}`)}
               className="flex items-center gap-2 px-4 py-2 text-xs font-mono font-medium rounded bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-colors"

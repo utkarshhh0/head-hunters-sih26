@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Investigative Analytical Report - {{ header.finding_id }}</title>
+    <style>
+        {{ css_content }}
+    </style>
+</head>
+<body>
+
+    <!-- 1. HEADER -->
+    <header class="header-container">
+        <h1 class="report-title">{{ header.title }}</h1>
+        <div class="report-subtitle">Analytical Intelligence Summary &amp; Provenance Audit</div>
+
+        <div class="meta-grid">
+            <div class="meta-row">
+                <div class="meta-cell-label">Finding Identifier:</div>
+                <div class="meta-cell-value"><strong class="code-cell">{{ header.finding_id }}</strong></div>
+            </div>
+            <div class="meta-row">
+                <div class="meta-cell-label">Lifecycle Status:</div>
+                <div class="meta-cell-value">
+                    <span class="badge badge-{{ header.status|lower|replace('_', '-') }}">{{ header.status }}</span>
+                </div>
+            </div>
+            <div class="meta-row">
+                <div class="meta-cell-label">Pattern Type:</div>
+                <div class="meta-cell-value">
+                    <span class="badge badge-pattern">{{ header.pattern_type }}</span>
+                </div>
+            </div>
+            <div class="meta-row">
+                <div class="meta-cell-label">Generated Timestamp:</div>
+                <div class="meta-cell-value">{{ header.generated_at }}</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Synthetic / Controlled Demonstration Notice -->
+    <div class="notice-banner">
+        <div class="notice-title">Demonstration Environment Notice</div>
+        <div>{{ header.synthetic_notice }}</div>
+    </div>
+
+    <!-- 2. EXECUTIVE SUMMARY -->
+    <section class="section">
+        <h2 class="section-title">2. Executive Summary</h2>
+        <div class="summary-card">
+            <div class="summary-title">{{ summary.title }}</div>
+            <p class="summary-text">{{ summary.summary }}</p>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Analytical Parameter</th>
+                    <th style="width: 75%;">Observed Specification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Observed Time Window</strong></td>
+                    <td>{{ summary.time_window_text }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Pattern Classification</strong></td>
+                    <td class="code-cell">{{ summary.pattern_type }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Lifecycle Status</strong></td>
+                    <td>{{ summary.status }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% if summary.caveats %}
+        <div style="margin-top: 6px;">
+            <strong style="font-size: 8.5pt; color: #475569;">Analytical Caveats:</strong>
+            <ul class="limitations-list">
+                {% for caveat in summary.caveats %}
+                <li>{{ caveat }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- 3. ENTITY PROFILE -->
+    <section class="section">
+        <h2 class="section-title">3. Entity Profile</h2>
+        {% if entities %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Entity Identifier</th>
+                    <th style="width: 28%;">Canonical Name</th>
+                    <th style="width: 18%;">Entity Type</th>
+                    <th style="width: 24%;">Observed Attributes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entity in entities %}
+                <tr>
+                    <td class="code-cell">{{ entity.entity_id }}</td>
+                    <td><strong>{{ entity.canonical_name }}</strong></td>
+                    <td><span class="badge badge-pattern">{{ entity.entity_type }}</span></td>
+                    <td>
+                        {% if entity.attributes %}
+                            {% for k, v in entity.attributes.items() %}
+                                <div><small>{{ k }}: {{ v }}</small></div>
+                            {% endfor %}
+                        {% else %}
+                            <small style="color: #94a3b8;">None observed</small>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No entities associated with this finding.</div>
+        {% endif %}
+    </section>
+
+    <!-- 4. NETWORK OVERVIEW -->
+    <section class="section">
+        <h2 class="section-title">4. Network Overview</h2>
+        {% if relationships %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 24%;">Relationship ID</th>
+                    <th style="width: 16%;">Source Entity</th>
+                    <th style="width: 16%;">Target Entity</th>
+                    <th style="width: 16%;">Type</th>
+                    <th style="width: 8%;">Count</th>
+                    <th style="width: 20%;">Observed Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rel in relationships %}
+                <tr>
+                    <td class="code-cell">{{ rel.relationship_id }}</td>
+                    <td class="code-cell">{{ rel.source_entity_id }}</td>
+                    <td class="code-cell">{{ rel.target_entity_id }}</td>
+                    <td><span class="badge badge-pattern">{{ rel.relationship_type }}</span></td>
+                    <td style="text-align: center;">{{ rel.interaction_count if rel.interaction_count is not none else "-" }}</td>
+                    <td>
+                        {% if rel.first_seen or rel.last_seen %}
+                            <small>
+                                First: {{ rel.first_seen or "Not recorded" }}<br>
+                                Last: {{ rel.last_seen or "Not recorded" }}
+                            </small>
+                        {% else %}
+                            <small style="color: #94a3b8;">Not recorded</small>
+                        {% endif %}
+                        {% if rel.evidence_ids %}
+                            <div style="margin-top: 2px;"><small class="code-cell" style="color: #64748b;">Ev: {{ rel.evidence_ids|join(', ') }}</small></div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No direct relationships associated with this finding.</div>
+        {% endif %}
+    </section>
+
+    <!-- 5. TIMELINE / ACTIVITY -->
+    <section class="section">
+        <h2 class="section-title">5. Timeline / Activity</h2>
+        {% if timeline_events %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Timestamp</th>
+                    <th style="width: 30%;">Temporal Context</th>
+                    <th style="width: 45%;">Observed Specification</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in timeline_events %}
+                <tr>
+                    <td class="code-cell">{{ event.timestamp }}</td>
+                    <td><strong>{{ event.event_type }}</strong></td>
+                    <td>{{ event.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No temporal activity timestamps recorded for this pattern.</div>
+        {% endif %}
+    </section>
+
+    <!-- 6. ANALYTICAL FINDINGS -->
+    <section class="section">
+        <h2 class="section-title">6. Analytical Findings</h2>
+
+        {% if pattern %}
+        <div class="summary-card" style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span class="badge badge-pattern">Pattern: {{ pattern.pattern_type }}</span>
+                <span class="code-cell" style="font-size: 7.5pt; color: #64748b;">ID: {{ pattern.pattern_id }}</span>
+            </div>
+            <div style="font-size: 8.5pt; margin-top: 4px;"><strong>Detection Method:</strong> {{ pattern.detection_method }}</div>
+            <div style="font-size: 8.5pt; margin-top: 4px;"><strong>Analytical Explanation:</strong> {{ pattern.explanation }}</div>
+        </div>
+        {% endif %}
+
+        {% if signals %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Signal Identifier</th>
+                    <th style="width: 20%;">Signal Classification</th>
+                    <th style="width: 12%;">Metric Value</th>
+                    <th style="width: 43%;">Deterministic Rule Trigger</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sig in signals %}
+                <tr>
+                    <td class="code-cell">{{ sig.signal_id }}</td>
+                    <td><span class="badge badge-pattern">{{ sig.signal_type }}</span></td>
+                    <td style="text-align: right; font-family: monospace;">{{ "%.4f"|format(sig.metric_value) if sig.metric_value is number else sig.metric_value }}</td>
+                    <td>
+                        {{ sig.rule_description }}
+                        {% if sig.entity_ids %}
+                        <div style="margin-top: 2px;"><small class="code-cell" style="color: #64748b;">Entities: {{ sig.entity_ids|join(', ') }}</small></div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No contributing signals recorded for this finding.</div>
+        {% endif %}
+    </section>
+
+    <!-- 7. SUPPORTING EVIDENCE -->
+    <section class="section">
+        <h2 class="section-title">7. Supporting Evidence</h2>
+        {% if evidence_items %}
+            {% for item in evidence_items %}
+            <div class="evidence-chain-item">
+                <div class="evidence-header">
+                    <span>Evidence Record: <strong class="code-cell">{{ item.evidence_id }}</strong></span>
+                    <span class="badge badge-pattern">{{ item.extraction_type }}</span>
+                </div>
+
+                {% if item.extracted_value %}
+                <div style="font-size: 8.5pt; margin-top: 3px; color: #334155;">
+                    <strong>Extracted Value:</strong> {{ item.extracted_value }}
+                </div>
+                {% endif %}
+
+                {% if item.confidence is not none %}
+                <div style="font-size: 8pt; color: #64748b; margin-top: 2px;">
+                    Analytical Confidence: {{ "%.2f"|format(item.confidence) }}
+                </div>
+                {% endif %}
+
+                <!-- Preserving Chain: Finding -> Evidence -> Source Record -->
+                {% if item.source_record %}
+                <div class="source-record-box">
+                    <div class="source-record-title">Source Record: {{ item.source_record.source_id }}</div>
+                    <div style="display: table; width: 100%; font-size: 7.5pt;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; width: 25%; font-weight: 600;">Feed Classification:</div>
+                            <div style="display: table-cell;">{{ item.source_record.source_type }}</div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; font-weight: 600;">Source Document:</div>
+                            <div style="display: table-cell;">{{ item.source_record.document_name }}</div>
+                        </div>
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; font-weight: 600;">Ingested Timestamp:</div>
+                            <div style="display: table-cell;">{{ item.source_record.ingested_at }}</div>
+                        </div>
+                    </div>
+                    {% if item.source_record.raw_content %}
+                    <div class="raw-snippet">{{ item.source_record.raw_content }}</div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">
+                    Associated Source ID: {{ item.source_id or "Direct analytical derivation" }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="empty-state">No supporting evidence records linked to this finding.</div>
+        {% endif %}
+
+        {% if standalone_source_records %}
+        <div style="margin-top: 10px;">
+            <strong style="font-size: 8.5pt; color: #475569;">Additional Referenced Source Records:</strong>
+            <table class="data-table" style="margin-top: 4px;">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Source ID</th>
+                        <th style="width: 25%;">Feed Classification</th>
+                        <th style="width: 25%;">Document Name</th>
+                        <th style="width: 25%;">Ingested Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for src in standalone_source_records %}
+                    <tr>
+                        <td class="code-cell">{{ src.source_id }}</td>
+                        <td>{{ src.source_type }}</td>
+                        <td>{{ src.document_name }}</td>
+                        <td>{{ src.ingested_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- 8. INVESTIGATOR NOTES -->
+    {% if investigator_notes %}
+    <section class="section">
+        <h2 class="section-title">8. Investigator Notes</h2>
+        <div class="notes-box">{{ investigator_notes }}</div>
+    </section>
+    {% endif %}
+
+    <!-- 9. METHODOLOGY / LIMITATIONS -->
+    <section class="section">
+        <h2 class="section-title">9. Methodology &amp; Analytical Limitations</h2>
+        <div class="methodology-box">
+            <p>{{ methodology.statement }}</p>
+
+            {% if methodology.limitations %}
+            <div style="margin-top: 6px;">
+                <strong>Identified Analytical Limitations:</strong>
+                <ul class="limitations-list">
+                    {% for lim in methodology.limitations %}
+                    <li>{{ lim }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+</body>
+</html>

@@ -7,8 +7,8 @@ export const Login: React.FC = () => {
   const { loginDemo, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const [badgeId, setBadgeId] = useState('INV-7842');
-  const [name, setName] = useState('Lead Investigator J. Vance');
+  const [badgeId, setBadgeId] = useState('DEMO-USER');
+  const [name, setName] = useState('Demo Investigator');
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -35,7 +35,7 @@ export const Login: React.FC = () => {
               SIH26189
             </span>
             <span className="text-xs font-mono text-blue-400 tracking-wider">
-              INVESTIGATOR SYSTEM
+              INVESTIGATOR WORKSPACE
             </span>
           </div>
           <h1 className="text-lg font-semibold text-white tracking-tight">
@@ -51,14 +51,14 @@ export const Login: React.FC = () => {
           <div className="flex items-center gap-2 pb-3 border-b border-institutional-borderMuted">
             <Lock className="w-4 h-4 text-slate-400" />
             <h2 className="text-xs font-mono uppercase tracking-wider text-institutional-textPrimary font-semibold">
-              Authorized Demo Access
+              Demo Workspace Access
             </h2>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-mono uppercase text-institutional-textSecondary mb-1.5">
-                Investigator Badge ID
+                Demo User ID
               </label>
               <input
                 type="text"
@@ -66,13 +66,13 @@ export const Login: React.FC = () => {
                 onChange={(e) => setBadgeId(e.target.value)}
                 required
                 className="w-full px-3 py-2 text-xs font-mono rounded bg-slate-900 border border-slate-800 focus:border-blue-700 focus:outline-none text-white transition-colors"
-                placeholder="INV-XXXX"
+                placeholder="DEMO-USER"
               />
             </div>
 
             <div>
               <label className="block text-xs font-mono uppercase text-institutional-textSecondary mb-1.5">
-                Investigator Name / Title
+                Display Name
               </label>
               <input
                 type="text"
@@ -80,7 +80,7 @@ export const Login: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 required
                 className="w-full px-3 py-2 text-xs font-mono rounded bg-slate-900 border border-slate-800 focus:border-blue-700 focus:outline-none text-white transition-colors"
-                placeholder="Investigator Name"
+                placeholder="Demo Investigator"
               />
             </div>
 
@@ -110,6 +110,14 @@ export const Login: React.FC = () => {
             </span>
           </div>
         </div>
+
+          {/* Demonstration notice */}
+          <div className="pt-3 border-t border-institutional-borderMuted flex items-start gap-2 text-[11px] font-mono text-institutional-textMuted leading-relaxed">
+            <AlertCircle className="w-3.5 h-3.5 text-amber-500/80 shrink-0 mt-0.5" />
+            <span>
+              Controlled demonstration using synthetic data. Analytical findings are intended to support investigator review and do not determine guilt or criminal liability.
+            </span>
+          </div>
 
         {/* Backend Endpoint Notice */}
         <div className="text-center">

@@ -63,7 +63,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside className="w-64 bg-institutional-panel border-r border-institutional-border flex flex-col shrink-0 min-h-screen">
-      {/* Institutional System Header */}
+      {/* Project Header */}
       <div className="p-4 border-b border-institutional-border bg-slate-950/60">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded bg-blue-950 border border-blue-800 flex items-center justify-center text-blue-400 shrink-0">
@@ -75,7 +75,7 @@ export const Sidebar: React.FC = () => {
                 SIH26189
               </span>
               <span className="text-[10px] font-mono px-1 py-0.2 rounded bg-blue-950 border border-blue-800 text-blue-300">
-                P-6A
+                R2
               </span>
             </div>
             <div className="text-[11px] text-institutional-textSecondary font-medium tracking-tight">
@@ -129,28 +129,28 @@ export const Sidebar: React.FC = () => {
         ))}
       </nav>
 
-      {/* Investigator Clearance / Session Footer */}
+      {/* Workspace / Session Footer */}
       <div className="p-3 border-t border-institutional-border bg-slate-950/60">
         <div className="p-2.5 rounded bg-slate-900/80 border border-institutional-border">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono text-institutional-textMuted uppercase">
-              Investigator Clearance
+              Workspace
             </span>
             <span className="text-[10px] font-mono text-emerald-400 font-semibold">
               ACTIVE
             </span>
           </div>
           <div className="text-xs font-mono font-medium text-white truncate mt-0.5">
-            {session?.name || 'Authorized Investigator'}
+            {session?.name || 'Investigator'}
           </div>
           <div className="text-[10px] font-mono text-institutional-textSecondary truncate">
-            {session?.badgeId || 'INV-7842'} · {session?.station || 'SCB Intel'}
+            {session?.badgeId || 'DEMO-USER'} · {session?.station || 'Local Workspace'}
           </div>
 
           <button
             onClick={logout}
             className="w-full mt-3 flex items-center justify-center gap-1.5 px-2 py-1 text-xs font-mono rounded bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 transition-colors"
-          >
+         >
             <LogOut className="w-3 h-3 text-slate-400" />
             <span>End Session</span>
           </button>

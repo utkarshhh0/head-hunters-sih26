@@ -35,14 +35,37 @@ export interface FindingStatusUpdate {
   notes?: string | null;
 }
 
+export interface EvidenceRecord {
+  evidence_id: string;
+  source_record_id: string;
+  source_type: string;
+  document_name: string;
+  raw_snippet: string;
+  offset_start?: number | null;
+  offset_end?: number | null;
+  extractor_name: string;
+  extracted_at: string;
+  [key: string]: unknown;
+}
+
+export interface SourceRecordItem {
+  source_id: string;
+  source_type: string;
+  document_name: string;
+  raw_content: string;
+  metadata?: Record<string, unknown>;
+  ingested_at: string;
+  [key: string]: unknown;
+}
+
 export interface FindingProvenanceBundle {
   finding: InvestigativeFinding;
   pattern?: Record<string, unknown> | null;
   signals: Record<string, unknown>[];
   entities: Record<string, unknown>[];
   relationships: Record<string, unknown>[];
-  evidence: Record<string, unknown>[];
-  source_records: Record<string, unknown>[];
+  evidence: EvidenceRecord[];
+  source_records: SourceRecordItem[];
 }
 
 export interface WorkspaceSummary {

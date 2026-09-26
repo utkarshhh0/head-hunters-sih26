@@ -22,6 +22,7 @@ import {
   Fingerprint,
   Layers,
   X,
+  Clock,
   ChevronRight,
 } from 'lucide-react';
 import {
@@ -1042,6 +1043,15 @@ export const NetworkExplorer: React.FC = () => {
                       <span>Re-Center Network Here</span>
                     </button>
                   )}
+
+                  {/* Tertiary Action: Trace Chronology in Timeline */}
+                  <Link
+                    to={`/timeline?entity_id=${encodeURIComponent(selectedNode.id)}`}
+                    className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded text-xs font-mono flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <Clock className="w-3.5 h-3.5 text-blue-400" />
+                    <span>View Timeline Activity</span>
+                  </Link>
                 </div>
               </div>
 
@@ -1285,14 +1295,22 @@ export const NetworkExplorer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Direct Link to Center Entity Intelligence */}
-              <div className="pt-2">
+              {/* Direct Links to Center Entity Intelligence & Timeline */}
+              <div className="pt-2 space-y-2">
                 <Link
                   to={`/entities?id=${encodeURIComponent(focusEntityId)}`}
                   className="w-full py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-mono font-medium flex items-center justify-center gap-2 transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Inspect Center Entity Intelligence</span>
+                </Link>
+
+                <Link
+                  to={`/timeline?entity_id=${encodeURIComponent(focusEntityId)}`}
+                  className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded text-xs font-mono flex items-center justify-center gap-2 transition-colors"
+                >
+                  <Clock className="w-3.5 h-3.5 text-blue-400" />
+                  <span>View Timeline Activity</span>
                 </Link>
               </div>
 

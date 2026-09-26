@@ -98,7 +98,7 @@ export const Dashboard: React.FC = () => {
             Investigator Workspace Summary
           </h1>
           <p className="text-xs text-institutional-textSecondary mt-1">
-            Real-time aggregate status of entity intelligence, detected patterns, and multi-signal finding lifecycle.
+            Current status of entities, analytical signals, and findings in the investigation workspace.
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export const Dashboard: React.FC = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-mono uppercase tracking-wider text-institutional-textMuted font-semibold">
-            Investigative Metrics (Genuine Backend Signals)
+            Workspace Metrics
           </h2>
           <span className="text-[11px] font-mono text-slate-500">
             Source: /api/v1/workspace/summary
@@ -187,22 +187,19 @@ export const Dashboard: React.FC = () => {
             isAvailable={summary !== null}
             sourceNote="Structural & temporal signals"
           />
-          {/* Strict honest state: No fabricated numbers for metrics not yet in summary */}
           <MetricCard
-            label="Records Processed"
-            value={null}
-            statusText="Awaiting Pipeline Stream"
-            sourceNote="Ingestion pipeline Phase 2/3"
-            isLoading={false}
-            isAvailable={false}
+            label="Open Findings"
+            value={summary ? (summary.findings_by_status?.['OPEN'] ?? 0) : null}
+            isLoading={isLoading}
+            isAvailable={summary !== null}
+            sourceNote="Findings awaiting triage"
           />
           <MetricCard
-            label="Network Clusters"
-            value={null}
-            statusText="Phase 6B Analytics"
-            sourceNote="Girvan-Newman community sync"
-            isLoading={false}
-            isAvailable={false}
+            label="Pattern Types"
+            value={summary ? Object.keys(summary.findings_by_pattern_type).length : null}
+            isLoading={isLoading}
+            isAvailable={summary !== null}
+            sourceNote="Distinct pattern classifications"
           />
         </div>
       </section>
@@ -249,7 +246,7 @@ export const Dashboard: React.FC = () => {
           {/* Pattern Type Distribution */}
           <div className="pt-4 border-t border-institutional-borderMuted">
             <h3 className="text-xs font-mono text-institutional-textSecondary uppercase tracking-wider mb-2.5">
-              Detected Multi-Signal Pattern Convergence
+              Findings by Pattern Type
             </h3>
             {summary && Object.keys(summary.findings_by_pattern_type).length > 0 ? (
               <div className="space-y-2">
@@ -281,7 +278,7 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center gap-2 border-b border-institutional-borderMuted pb-3">
               <Server className="w-4 h-4 text-emerald-400" />
               <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-institutional-textPrimary">
-                Investigator Backend State
+                System Status
               </h2>
             </div>
 
@@ -298,12 +295,12 @@ export const Dashboard: React.FC = () => {
               </div>
               <div className="flex justify-between py-1.5 border-b border-institutional-borderMuted">
                 <span className="text-institutional-textSecondary">Knowledge Graph:</span>
-                <span className="text-emerald-400">Neo4j Bolt Verified</span>
+                <span className="text-emerald-400">Connected</span>
               </div>
               <div className="flex justify-between py-1.5 border-b border-institutional-borderMuted">
-                <span className="text-institutional-textSecondary">Active Case URN:</span>
+                <span className="text-institutional-textSecondary">Workspace:</span>
                 <span className="text-slate-300 truncate max-w-[150px]">
-                  hawkeye-2026
+                  Operation Hawkeye
                 </span>
               </div>
               <div className="flex justify-between py-1.5">
@@ -314,8 +311,8 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="p-3 rounded bg-slate-950 border border-slate-800 text-[11px] font-mono text-institutional-textMuted">
-            <span className="text-slate-300 font-semibold">Audit Notice: </span>
-            All analytical requests are parameterized and strictly bound to depth 1 or 2. No arbitrary Cypher permitted.
+            <span className="text-slate-300 font-semibold">Demo Environment: </span>
+            Local prototype with bounded graph queries and controlled synthetic data.
           </div>
         </div>
       </div>
@@ -324,10 +321,10 @@ export const Dashboard: React.FC = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-mono uppercase tracking-wider text-institutional-textMuted font-semibold">
-            Investigator Analytical Progression
+            Investigation Workflow
           </h2>
           <span className="text-[11px] font-mono text-slate-500">
-            Click to navigate through investigative stages
+            Follow the analysis from search to report
           </span>
         </div>
 
@@ -339,12 +336,12 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-blue-400 group-hover:text-blue-300" />
-                <span className="text-xs font-mono font-semibold text-white">1. SEARCH & RECON</span>
+                <span className="text-xs font-mono font-semibold text-white">1. ENTITY SEARCH</span>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-blue-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Query canonical entities by name, alias, phone number, or national identifier.
+              Search entities using names, aliases, identifiers, phones, vehicles, or accounts.
             </p>
           </div>
 
@@ -355,12 +352,12 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Network className="w-4 h-4 text-sky-400 group-hover:text-sky-300" />
-                <span className="text-xs font-mono font-semibold text-white">2. NETWORK EXPLORER</span>
+                <span className="text-xs font-mono font-semibold text-white">2. NETWORK EXPLORATION</span>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Inspect bounded 1-hop and 2-hop graph neighborhoods and topological structures.
+              Explore connected entities and relationships across the investigation graph.
             </p>
           </div>
 
@@ -371,12 +368,12 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-                <span className="text-xs font-mono font-semibold text-white">3. TEMPORAL ANALYSIS</span>
+                <span className="text-xs font-mono font-semibold text-white">3. TIMELINE</span>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-indigo-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Examine communication bursts, activity concentration windows, and undated traces.
+              Review when relationships were observed and where activity is concentrated over time.
             </p>
           </div>
 
@@ -387,12 +384,12 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-amber-400 group-hover:text-amber-300" />
-                <span className="text-xs font-mono font-semibold text-white">4. ANALYTICAL FINDINGS</span>
+                <span className="text-xs font-mono font-semibold text-white">4. FINDINGS</span>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Review multi-signal pattern flags, triage lifecycle status, and record investigator notes.
+              Review analytical patterns, update finding status, and record investigator notes.
             </p>
           </div>
 
@@ -403,12 +400,12 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileCheck className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300" />
-                <span className="text-xs font-mono font-semibold text-white">5. EVIDENCE PROVENANCE</span>
+                <span className="text-xs font-mono font-semibold text-white">5. EVIDENCE</span>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Inspect evidentiary offsets and verify end-to-end trace back to original SourceRecords.
+              Trace analytical findings back to supporting evidence and source records.
             </p>
           </div>
 
@@ -424,7 +421,7 @@ export const Dashboard: React.FC = () => {
               <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-purple-400 transition-transform group-hover:translate-x-0.5" />
             </div>
             <p className="text-xs text-institutional-textSecondary mt-2">
-              Export structured findings, entity networks, and evidence chains into court-ready dossiers.
+              Export findings, network context, timelines, and supporting evidence as a structured report.
             </p>
           </div>
         </div>

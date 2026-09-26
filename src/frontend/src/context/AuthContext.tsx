@@ -20,12 +20,12 @@ interface AuthContextType {
 const STORAGE_KEY = 'sih26189_investigator_session';
 
 const DEFAULT_DEMO_SESSION: InvestigatorSession = {
-  badgeId: 'INV-7842',
-  name: 'Lead Investigator J. Vance',
-  role: 'Special Crime Branch Analyst',
-  clearanceLevel: 'LEVEL 4 — RESTRICTED INVESTIGATIVE ACCESS',
+  badgeId: 'DEMO-USER',
+  name: 'Demo Investigator',
+  role: 'Investigation Workspace User',
+  clearanceLevel: 'DEMO ACCESS',
   caseWorkspace: 'OPERATION HAWKEYE [CASE-2026-0814]',
-  station: 'Special Operations Command',
+  station: 'Local Demonstration Workspace',
   authenticatedAt: new Date().toISOString(),
 };
 

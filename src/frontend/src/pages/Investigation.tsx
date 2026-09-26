@@ -81,10 +81,19 @@ export const Investigation: React.FC = () => {
     }
   }, []);
 
-  // Initial search on mount
+  // Initial search on mount and URL synchronization
   useEffect(() => {
     executeSearch(initialQuery, initialType);
   }, [executeSearch, initialQuery, initialType]);
+
+  const handleTypeChange = (newType: string) => {
+    setSelectedType(newType);
+    const newParams: Record<string, string> = {};
+    if (query.trim()) newParams.q = query.trim();
+    if (newType.trim()) newParams.type = newType.trim();
+    setSearchParams(newParams);
+    executeSearch(query, newType);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,21 +137,21 @@ export const Investigation: React.FC = () => {
                   MOD-01-SRCH
                 </span>
                 <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
-                  Operational (Phase 6B.1)
+                  READY
                 </span>
               </div>
               <h1 className="text-xl font-semibold text-institutional-textPrimary tracking-tight mt-1">
                 Investigation / Entity Search
               </h1>
               <p className="text-xs text-institutional-textSecondary mt-0.5">
-                Query canonical entities by name, alias, phone, vehicle plate, account, or national identifier.
+                Search entities across names, identifiers, phones, vehicles, locations, organizations, and accounts.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-mono px-3 py-1.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
             <Shield className="w-4 h-4 text-blue-400" />
-            <span>KNOWLEDGE GRAPH SEARCH</span>
+            <span>ENTITY SEARCH</span>
           </div>
         </div>
       </div>
@@ -165,9 +174,7 @@ export const Investigation: React.FC = () => {
             <Filter className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <select
               value={selectedType}
-              onChange={(e) => {
-                setSelectedType(e.target.value);
-              }}
+              onChange={(e) => handleTypeChange(e.target.value)}
               className="w-full pl-8 pr-3 py-2 text-xs font-mono rounded bg-slate-900 border border-slate-800 focus:border-blue-700 focus:outline-none text-white appearance-none cursor-pointer"
             >
               {ENTITY_TYPES.map((t) => (
@@ -189,7 +196,7 @@ export const Investigation: React.FC = () => {
         </form>
 
         <div className="mt-3 pt-3 border-t border-institutional-borderMuted flex items-center justify-between text-[11px] font-mono text-institutional-textMuted">
-          <span>Target Endpoint: GET /api/v1/entities (Max Limit: 100)</span>
+          <span>Search source: investigation graph · up to 100 results</span>
           {hasSearched && (
             <span className="text-slate-400">
               Found <strong className="text-white tabular-numbers">{results.length}</strong> matching canonical entities
@@ -214,7 +221,7 @@ export const Investigation: React.FC = () => {
         <div className="p-8 rounded-md bg-institutional-panel border border-institutional-border text-center space-y-3">
           <RefreshCw className="w-5 h-5 text-blue-400 animate-spin mx-auto" />
           <div className="text-xs font-mono text-slate-400">
-            Querying knowledge graph entities from Neo4j...
+            Searching investigation data...
           </div>
         </div>
       )}
@@ -227,7 +234,7 @@ export const Investigation: React.FC = () => {
             No Entities Found
           </h2>
           <p className="text-xs text-institutional-textSecondary max-w-md mx-auto">
-            Zero canonical entities matched query criteria. Clear filters or verify if data has been ingested into the graph database.
+            No entities matched the current search. Try a different term or adjust the entity type filter.
           </p>
         </div>
       )}
@@ -237,10 +244,10 @@ export const Investigation: React.FC = () => {
         <div className="rounded-md bg-institutional-panel border border-institutional-border overflow-hidden">
           <div className="p-3 border-b border-institutional-border flex items-center justify-between bg-slate-950/40">
             <span className="text-xs font-mono uppercase tracking-wider text-institutional-textSecondary font-semibold">
-              Canonical Entities Ledger
+              Entity Search Results
             </span>
             <span className="text-[11px] font-mono text-slate-400">
-              Deterministic Knowledge Graph Slice
+              Results from the investigation graph
             </span>
           </div>
 
@@ -251,8 +258,8 @@ export const Investigation: React.FC = () => {
                   <th className="py-2.5 px-4 font-semibold">Entity Type</th>
                   <th className="py-2.5 px-4 font-semibold">Canonical Name / Value</th>
                   <th className="py-2.5 px-4 font-semibold">Key Identifier</th>
-                  <th className="py-2.5 px-4 font-semibold">Entity URN</th>
-                  <th className="py-2.5 px-4 font-semibold text-right">Investigation</th>
+                  <th className="py-2.5 px-4 font-semibold">Entity ID</th>
+                  <th className="py-2.5 px-4 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-institutional-borderMuted">
